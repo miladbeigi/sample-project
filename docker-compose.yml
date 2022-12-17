@@ -1,0 +1,20 @@
+version: "3.7"
+services:
+
+  db:
+    image: mariadb:10.6
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: notSecureChangeMe
+    ports:
+      - 3306:3306
+
+  update-permissions:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    container_name: update-permissions-app
+    volumes:
+      - ./permissions.yaml:/app/permissions.yaml
+    depends_on:
+      - db

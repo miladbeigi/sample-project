@@ -1,0 +1,73 @@
+teams:
+    - name: Backend
+      teamLead: Roberto
+      members:
+        - name: Stefano
+          email: stefano@domain.com
+          permissions:
+            aws: dev
+            explorer: admin
+            sensors: admin
+            grafana: reader
+            cluster: dev
+            database: dev
+        - name: Mary
+          email: mary@domain.com
+          permissions:
+            aws: dev
+            explorer: admin
+            sensors: reader
+            grafana: reader
+            cluster: dev
+            database: dev
+        - name: Milad
+          email: milad@domain.com
+          permissions:
+            aws: dev
+            explorer: admin
+            sensors: reader
+            grafana: reader
+            cluster: dev
+            database: dev
+    - name: DevOps
+      teamLead: Domenico
+      members:
+        - name: Marco
+          email: marco@domain.com
+          permissions:
+            aws: admin
+            explorer: reader
+            sensors: reader
+            grafana: admin
+            cluster: admin
+            database: dev
+        - name: Jack
+          email: jack@domain.com
+          permissions:
+            aws: admin
+            explorer: admin
+            sensors: admin
+            grafana: admin
+            cluster: admin
+            database: dev
+    - name: Data
+      teamLead: Antonio
+      members:
+        - name: Rob
+          email: rob@domain.com
+          permissions:
+            aws: dev
+            explorer: reader
+            sensors: admin
+            grafana: editor
+            cluster: dev
+            database: admin
+        - name: Mark
+          email: mark@domain.com
+          permissions:
+            aws: dev
+            explorer: reader
+            sensors: admin
+            grafana: editor
+            cluster: dev
+            database: admin
