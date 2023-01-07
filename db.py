@@ -1,8 +1,8 @@
-# importing required library
 import mysql.connector
 import time
 import logging
 import sys
+import os
 import constants
 
 logger = logging.getLogger()
@@ -29,10 +29,10 @@ def init_connection():
     while not_connected:
         try:
             data_base = mysql.connector.connect(
-                host=constants.MYSQL_HOST,
-                user=constants.MYSQL_USER,
-                passwd=constants.MYSQL_ROOT_PASSWORD,
-                database=constants.MYSQL_DEFAULT_DATABASE)
+                host=os.environ.get('MYSQL_HOST'),
+                user=os.environ.get('MYSQL_USER'),
+                passwd=os.environ.get('MYSQL_ROOT_PASSWORD'),
+                database=os.environ.get('MYSQL_DEFAULT_DATABASE'))
             not_connected = False
         except:
             logger.error(" Connecting to mysql server...")

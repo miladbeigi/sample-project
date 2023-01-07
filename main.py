@@ -21,30 +21,9 @@ def read_yaml(path):
 
 
 def main():
-    file_path = "permissions.yaml"
+    file_path = constants.YAML_FILE_NAME
     yaml_object = read_yaml(file_path)
     return yaml_object
-
-
-def read_csv(path):
-    csv_records = []
-    with open(path) as file:
-        csvFile = csv.DictReader(file)
-        for line in csvFile:
-            csv_records.append(line)
-    return csv_records
-
-
-def save_csv(myOrderedDict):
-    with open("new_table.csv", "w") as outfile:
-        csvwriter = csv.writer(outfile)
-        csvwriter.writerow(myOrderedDict[0].keys())
-        for line in myOrderedDict:
-            keys, values = [], []
-            for key, value in line.items():
-                keys.append(key)
-                values.append(value)
-            csvwriter.writerow(values)
 
 
 def check_row(csv_records, email):
@@ -55,8 +34,7 @@ def check_row(csv_records, email):
 
 
 def update_permissions(table_records):
-    yaml_path = "permissions.yaml"
-    yaml_records = read_yaml(yaml_path)
+    yaml_records = read_yaml(constants.YAML_FILE_NAME)
 
     new_records = []
 
@@ -106,7 +84,8 @@ if __name__ == "__main__":
     while True:
 
         if hash_yaml_file.hash_value == hash_update_file.hash_value and not first_run:
-            logger.info(" File has not been updated, skipping the database update...")
+            logger.info(
+                " File has not been updated, skipping the database update...")
         else:
             logger.info(" Updating records...")
             table_records = get_records()
@@ -115,10 +94,11 @@ if __name__ == "__main__":
                 delete_records()
                 write_records(new_records)
             hash_yaml_file.update_hash()
-        
-        logger.info(" Trying again after %s seconds", constants.RUN_PERIOD_SECONDS)
-        time.sleep(constants.RUN_PERIOD_SECONDS) 
-        
+
+        logger.info(" Trying again after %s seconds",
+                    constants.RUN_PERIOD_SECONDS)
+        time.sleep(constants.RUN_PERIOD_SECONDS)
+
         logger.info(" Updating the hash....")
         hash_update_file.update_hash()
         first_run = False
