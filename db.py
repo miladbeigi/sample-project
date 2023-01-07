@@ -29,10 +29,11 @@ def init_connection():
     while not_connected:
         try:
             data_base = mysql.connector.connect(
-                host=os.environ.get('MYSQL_HOST'),
-                user=os.environ.get('MYSQL_USER'),
-                passwd=os.environ.get('MYSQL_ROOT_PASSWORD'),
-                database=os.environ.get('MYSQL_DEFAULT_DATABASE'))
+                host=os.environ.get('MYSQL_HOST', 'localhost'),
+                user=os.environ.get('MYSQL_USER', 'root'),
+                passwd=os.environ.get(
+                    'MYSQL_ROOT_PASSWORD', 'notSecureChangeMe'),
+                database=os.environ.get('MYSQL_DEFAULT_DATABASE', 'mysql'))
             not_connected = False
         except:
             logger.error(" Connecting to mysql server...")
@@ -40,31 +41,40 @@ def init_connection():
     return data_base
 
 
-def write_records(new_records):
+def write_records(table_name: str, new_records):
     # connecting to the database
     dataBase = init_connection()
     cur = dataBase.cursor(dictionary=True)
 
     table_records = [tuple(record.values()) for record in new_records]
 
-    insert_query = """
-        INSERT INTO permissions.permission_records
-        VALUES (%s, %s, %s, %s, %s)
-        """
+    table_name = f"INSERT INTO permissions.{table_name} "
+    values = "VALUES (%s, %s, %s, %s, %s)"
 
-    cur.executemany(insert_query, table_records)
+    cur.executemany(table_name+values, table_records)
     dataBase.commit()
 
 
-def delete_records():
+def delete_records(table_name: str):
     dataBase = init_connection()
     cur = dataBase.cursor(dictionary=True)
 
-    cur.execute("truncate table permissions.permission_records;")
+    cur.execute(f"truncate table permissions.{table_name};")
     dataBase.close()
 
 
-def get_records():
+def merge_tables():
+    # connecting to the database
+    dataBase = init_connection()
+    cur = dataBase.cursor(dictionary=True)
+
+    merge_query = "REPLACE INTO permissions.permission_records SELECT * FROM permissions.permission_records_temp;"
+
+    cur.execute(merge_query)
+    dataBase.commit()
+
+
+def get_table_records():
     # connecting to the database
     dataBase = init_connection()
     cur = dataBase.cursor(dictionary=True)
