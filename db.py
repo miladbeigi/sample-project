@@ -2,7 +2,7 @@
 import mysql.connector
 import time
 import logging
-
+import os
    
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -26,10 +26,10 @@ def init_connection():
     while not_connected:
         try:
             dataBase = mysql.connector.connect(
-                        host = "db",
-                        user = "root",
-                        passwd = "notSecureChangeMe",
-                        database = "mysql" )
+                        host = os.environ['MYSQL_HOST'],
+                        user = os.environ['MYSQL_USER'],
+                        passwd = os.environ['MYSQL_ROOT_PASSWORD'],
+                        database = os.environ['MYSQL_DEFAULT_DATABASE'] )
             not_connected = False
         except:
             logger.error("Trying to connect to mysql server")

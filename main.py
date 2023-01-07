@@ -54,10 +54,9 @@ def update_permissions(table_records):
 
     new_records = []
 
-
     for team in yaml_records['teams']:
         for member in team['members']:
-            print("Checking : ", member['email'] )
+            print("Checking : ", member['email'])
             index = check_row(table_records, member['email'])
             if index != None:
                 print("Found a match: ", member['email'])
@@ -80,15 +79,15 @@ def update_permissions(table_records):
         new_records.append(line)
 
     print(tabulate(new_records))
-    
+
     return new_records
 
 
 if __name__ == "__main__":
 
     check_db_exist = check_db_exist()
-    
-    if check_db_exist==False:
+
+    if check_db_exist == False:
         print("Creating the database")
         init_db()
     else:
@@ -100,5 +99,5 @@ if __name__ == "__main__":
         if new_records != []:
             delete_records()
             write_records(new_records)
-        
+
         time.sleep(5)
