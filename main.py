@@ -2,7 +2,7 @@ import yaml
 import csv
 from tabulate import tabulate
 import logging
-from db import init_db, get_records, write_records, delete_records, check_db_exist
+from db import init_db, get_table_records, write_records, delete_records, check_db_exist, merge_tables
 import time
 import constants
 from hash import Hash_File
@@ -33,37 +33,21 @@ def check_row(csv_records, email):
     return None
 
 
-def update_permissions(table_records):
-    yaml_records = read_yaml(constants.YAML_FILE_NAME)
+def get_yaml_records():
+    yaml_items = read_yaml(constants.YAML_FILE_NAME)
 
-    new_records = []
+    records = []
 
-    for team in yaml_records['teams']:
+    for team in yaml_items['teams']:
         for member in team['members']:
-            logger.info(" Checking : %s", member['email'])
-            index = check_row(table_records, member['email'])
-            if index != None:
-                logger.info(" Found a match: %s", member['email'])
-                table_records[index]['explorer'] = member['permissions']['explorer']
-                table_records[index]['sensors'] = member['permissions']['sensors']
-                logger.info(" Record updated: %s", member['email'])
-
-            else:
-                logger.info(" Adding a new record: %s", member['email'])
-                new_records.append({
+                records.append({
                     'name': member['name'],
                     'email': member['email'],
                     'team': team['name'],
                     'explorer': member['permissions']['explorer'],
                     'sensors': member['permissions']['sensors']
                 })
-
-    for line in table_records:
-        new_records.append(line)
-
-    logger.info(tabulate(new_records))
-
-    return new_records
+    return records
 
 
 if __name__ == "__main__":
@@ -88,11 +72,15 @@ if __name__ == "__main__":
                 " File has not been updated, skipping the database update...")
         else:
             logger.info(" Updating records...")
-            table_records = get_records()
-            new_records = update_permissions(table_records)
-            if new_records != []:
-                delete_records()
-                write_records(new_records)
+            table_records = get_table_records()
+            yaml_records = get_yaml_records()
+            
+            delete_records('permission_records_temp')
+            write_records('permission_records_temp', yaml_records)
+            
+            merge_tables()
+            
+            logger.info(tabulate(get_table_records()))
             hash_yaml_file.update_hash()
 
         logger.info(" Trying again after %s seconds",

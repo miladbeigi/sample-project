@@ -8,7 +8,18 @@ services:
       - .env
     ports:
       - 3306:3306
-
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8081:80
+  
   update-permissions:
     build:
       dockerfile: Dockerfile
