@@ -15,7 +15,7 @@ teams:
           email: mary@domain.com
           permissions:
             aws: dev
-            explorer: admin
+            explorer: reader
             sensors: reader
             grafana: reader
             cluster: dev
@@ -24,7 +24,7 @@ teams:
           email: milad@domain.com
           permissions:
             aws: dev
-            explorer: admin
+            explorer: reader
             sensors: reader
             grafana: reader
             cluster: dev

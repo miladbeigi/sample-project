@@ -4,8 +4,8 @@ services:
   db:
     image: mariadb:10.6
     restart: always
-    env_file:
-      - .env      
+    environment:
+      MYSQL_ROOT_PASSWORD: notSecureChangeMe
     ports:
       - 3306:3306
 
@@ -14,9 +14,7 @@ services:
       dockerfile: Dockerfile
       context: .
     container_name: update-permissions-app
-    env_file:
-      - .env      
     volumes:
-      - ./permissions.yaml:/app/permissions.yaml
+      - .:/app/
     depends_on:
       - db

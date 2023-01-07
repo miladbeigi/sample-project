@@ -4,9 +4,15 @@ from tabulate import tabulate
 import logging
 from db import init_db, get_records, write_records, delete_records, check_db_exist
 import time
+import constants
+from hash import Hash_File
+import os
+import sys
 
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 
 def read_yaml(path):
@@ -56,17 +62,16 @@ def update_permissions(table_records):
 
     for team in yaml_records['teams']:
         for member in team['members']:
-            print("Checking : ", member['email'])
+            logger.info(" Checking : %s", member['email'])
             index = check_row(table_records, member['email'])
             if index != None:
-                print("Found a match: ", member['email'])
-                # logger.info("Find a match: %", member['email'])
+                logger.info(" Found a match: %s", member['email'])
                 table_records[index]['explorer'] = member['permissions']['explorer']
-                print("Record updated: ", member['email'])
+                table_records[index]['sensors'] = member['permissions']['sensors']
+                logger.info(" Record updated: %s", member['email'])
 
             else:
-                print("Adding a new record: ", member['email'])
-                # logger.info("Adding a new record: %s", member['email'])
+                logger.info(" Adding a new record: %s", member['email'])
                 new_records.append({
                     'name': member['name'],
                     'email': member['email'],
@@ -78,7 +83,7 @@ def update_permissions(table_records):
     for line in table_records:
         new_records.append(line)
 
-    print(tabulate(new_records))
+    logger.info(tabulate(new_records))
 
     return new_records
 
@@ -88,16 +93,32 @@ if __name__ == "__main__":
     check_db_exist = check_db_exist()
 
     if check_db_exist == False:
-        print("Creating the database")
+        logger.info(" Creating the database")
         init_db()
     else:
-        print("database exists")
+        logger.info(" Database exists")
+
+    hash_yaml_file = Hash_File(constants.YAML_FILE_NAME)
+    hash_update_file = Hash_File(constants.YAML_FILE_NAME)
+
+    first_run = True
+
     while True:
 
-        table_records = get_records()
-        new_records = update_permissions(table_records)
-        if new_records != []:
-            delete_records()
-            write_records(new_records)
-
-        time.sleep(5)
+        if hash_yaml_file.hash_value == hash_update_file.hash_value and not first_run:
+            logger.info(" File has not been updated, skipping the database update...")
+        else:
+            logger.info(" Updating records...")
+            table_records = get_records()
+            new_records = update_permissions(table_records)
+            if new_records != []:
+                delete_records()
+                write_records(new_records)
+            hash_yaml_file.update_hash()
+        
+        logger.info(" Trying again after %s seconds", constants.RUN_PERIOD_SECONDS)
+        time.sleep(constants.RUN_PERIOD_SECONDS) 
+        
+        logger.info(" Updating the hash....")
+        hash_update_file.update_hash()
+        first_run = False
