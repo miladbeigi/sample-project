@@ -10,7 +10,7 @@ services:
       - .env
   
   update-permissions:
-    image: miladbeigi/sample-project:0.1.2
+    image: miladbeigi/sample-project:0.2.0
     env_file:
       - .env
     volumes:
