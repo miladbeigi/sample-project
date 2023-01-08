@@ -46,15 +46,15 @@ spec:
                 configMapKeyRef:
                   key: MYSQL_USER
                   name: env
-          image: miladbeigi/sample-project:0.1.1
+          image: miladbeigi/sample-project:0.1.2
           name: update-permissions
           resources: {}
           volumeMounts:
-            - mountPath: /app/update-permissions.log
-              name: update-permissions-claim0
+            - mountPath: /app/logs
+              name: mylogs
       restartPolicy: Always
       volumes:
-        - name: update-permissions-claim0
+        - name: mylogs
           persistentVolumeClaim:
-            claimName: update-permissions-claim0
+            claimName: mylogs
 status: {}

@@ -10,10 +10,13 @@ services:
       - .env
   
   update-permissions:
-    image: miladbeigi/sample-project:0.1.1
+    image: miladbeigi/sample-project:0.1.2
     env_file:
       - .env
     volumes:
-      - /app/update-permissions.log
+      - mylogs:/app/logs
     depends_on:
       - db
+
+volumes:
+  mylogs:

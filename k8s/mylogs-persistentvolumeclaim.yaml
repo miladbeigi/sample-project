@@ -3,8 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: update-permissions-claim0
-  name: update-permissions-claim0
+    io.kompose.service: mylogs
+  name: mylogs
 spec:
   accessModes:
     - ReadWriteOnce
