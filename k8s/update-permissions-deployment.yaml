@@ -46,7 +46,7 @@ spec:
                 configMapKeyRef:
                   key: MYSQL_USER
                   name: env
-          image: miladbeigi/sample-project:0.1.0
+          image: miladbeigi/sample-project:0.1.1
           name: update-permissions
           resources: {}
           volumeMounts:
