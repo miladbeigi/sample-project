@@ -4,10 +4,7 @@ from db import init_db, get_table_records, write_records, delete_records, check_
 import time
 import constants
 from hash import Hash_File
-from custom_logging import custom_logging
-
-logger = custom_logging().get_logger()
-
+from custom_logging import my_logger
 
 def read_yaml(path: str):
     with open(path) as file:
@@ -34,9 +31,9 @@ def get_yaml_records():
 if __name__ == "__main__":
 
     if check_db_exist():
-        logger.info(" Database exists")
+        my_logger.info(" Database exists")
     else:
-        logger.info(" Creating the database")
+        my_logger.info(" Creating the database")
         init_db()
 
     # Hash the content of YAML file
@@ -49,10 +46,10 @@ if __name__ == "__main__":
     while True:
 
         if hash_yaml_file.hash_value == hash_update_file.hash_value and not first_run:
-            logger.info(
+            my_logger.info(
                 " File has not been updated, skipping the database update...")
         else:
-            logger.info(" Updating records...")
+            my_logger.info(" Updating records...")
             table_records = get_table_records()
             yaml_records = get_yaml_records()
 
@@ -61,13 +58,13 @@ if __name__ == "__main__":
 
             merge_tables()
 
-            logger.info(tabulate(get_table_records()))
+            my_logger.info(tabulate(get_table_records()))
             hash_yaml_file.update_hash()
 
-        logger.info(" Trying again after %s seconds",
+        my_logger.info(" Trying again after %s seconds",
                     constants.RUN_PERIOD_SECONDS)
         time.sleep(constants.RUN_PERIOD_SECONDS)
 
-        logger.info(" Updating the hash....")
+        my_logger.info(" Updating the hash....")
         hash_update_file.update_hash()
         first_run = False

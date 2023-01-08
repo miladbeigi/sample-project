@@ -1,12 +1,8 @@
 import mysql.connector
 import time
-import logging
-import sys
 import os
 import constants
-from custom_logging import custom_logging
-
-logger = custom_logging().get_logger()
+from custom_logging import my_logger
 
 
 def init_connection():
@@ -21,7 +17,7 @@ def init_connection():
                 database=os.environ.get('MYSQL_DEFAULT_DATABASE', 'mysql'))
             not_connected = False
         except:
-            logger.error(" Connecting to mysql server...")
+            my_logger.error(" Connecting to mysql server...")
             time.sleep(constants.WAIT_FOR_DATABASE_SECONDS)
     return data_base_connection, data_base_connection.cursor(dictionary=True)
 
@@ -89,7 +85,7 @@ def init_db():
     with open('queries/init.sql', 'r') as sql_file:
         result_iterator = cur.execute(sql_file.read(), multi=True)
         for res in result_iterator:
-            logger.info(" Running query: %s", res)
-            logger.info(" Affected %s rows", res.rowcount)
+            my_logger.info(" Running query: %s", res)
+            my_logger.info(" Affected %s rows", res.rowcount)
         data_base_connection.commit()
     data_base_connection.close()
