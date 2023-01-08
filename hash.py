@@ -14,13 +14,13 @@ class Hash_File:
         sha256 = hashlib.sha256()
 
         with open(file_path, 'rb') as f:
-            while True:                
+            while True:
                 data = f.read(BUF_SIZE)
                 if not data:
                     break
-                sha256.update(data)        
+                sha256.update(data)
 
         return sha256.hexdigest()
-    
+
     def update_hash(self):
         self.hash_value = self.hash_file(self.file_path)
