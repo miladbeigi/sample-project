@@ -28,6 +28,6 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/app/
+      - .:/app
     depends_on:
       - db
