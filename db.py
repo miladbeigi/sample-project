@@ -4,10 +4,9 @@ import logging
 import sys
 import os
 import constants
+from custom_logging import custom_logging
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+logger = custom_logging().get_logger()
 
 
 def init_connection():

@@ -1,15 +1,12 @@
 import yaml
 from tabulate import tabulate
-import logging
 from db import init_db, get_table_records, write_records, delete_records, check_db_exist, merge_tables
 import time
 import constants
 from hash import Hash_File
-import sys
+from custom_logging import custom_logging
 
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+logger = custom_logging().get_logger()
 
 
 def read_yaml(path: str):
